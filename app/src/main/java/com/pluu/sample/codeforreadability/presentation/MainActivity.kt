@@ -7,13 +7,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
-import androidx.lifecycle.lifecycleScope
 import com.pluu.sample.codeforreadability.databinding.ActivityMainBinding
 import com.pluu.sample.codeforreadability.model.SampleItem
-import com.pluu.sample.codeforreadability.provider.provideRepository
 import com.pluu.sample.codeforreadability.utils.dp
-import kotlinx.coroutines.launch
-import logcat.logcat
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,9 +21,8 @@ class MainActivity : AppCompatActivity() {
         getSharedPreferences("sample", Context.MODE_PRIVATE)
     }
 
-    private val logRepository by lazy {
-        provideRepository()
-    }
+    // FIXED 3. use ViewModel
+    private val viewModel by lazy { SearchViewModel() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,18 +74,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun reset() {
-        // Use OkHttp, Retrofit
-        lifecycleScope.launch {
-            // Case 1.
-            val result = logRepository.sendLog()
-            logcat { result.toString() }
-
-            // Case 2.
-//            logRepository.sendLogFlow()
-//                .collect { result ->
-//                    logcat { result.toString() }
-//                }
-        }
+        // FIXED 3. move network
+        viewModel.sendLog()
         sampleAdapter.reset()
         binding.recyclerView.scrollToPosition(0)
     }
