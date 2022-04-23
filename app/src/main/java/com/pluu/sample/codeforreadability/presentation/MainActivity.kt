@@ -3,9 +3,9 @@ package com.pluu.sample.codeforreadability.presentation
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.pluu.sample.codeforreadability.data.ItemRepositoryImpl
 import com.pluu.sample.codeforreadability.data.SavingRepositoryImpl
 import com.pluu.sample.codeforreadability.databinding.ActivityMainBinding
-import com.pluu.sample.codeforreadability.provider.GenerateItemGeneratorImpl
 import com.pluu.sample.codeforreadability.utils.dp
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         // FIXED 6. provide generator
         // FIXED 7. provide saver
         SearchViewModel(
-            generator = GenerateItemGeneratorImpl(),
+            itemRepository = ItemRepositoryImpl(),
             savingRepository = SavingRepositoryImpl(this)
         )
     }
