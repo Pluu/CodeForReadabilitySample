@@ -18,7 +18,8 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
 
-        buildConfigField "String", "SAMPLE", '\"' + generateValue() + '"'
+        // FIXED 1. Always run Gradle task
+        buildConfigField "String", "SAMPLE", '\"123"'
     }
 
     buildTypes {
@@ -65,8 +66,4 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-}
-
-static def generateValue() {
-    return System.currentTimeMillis()
 }
