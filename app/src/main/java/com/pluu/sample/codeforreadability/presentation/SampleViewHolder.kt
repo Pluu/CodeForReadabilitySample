@@ -24,12 +24,13 @@ class SampleViewHolder(
         }
     }
 
-    fun onBind(item: SampleItem, favoriteText: String) {
+    fun onBind(item: SampleItem) {
         this.item = item
         binding.btnButton.text = item.text
         binding.btnButton.setTextColor(if (item.isDarkBg()) Color.WHITE else Color.BLACK)
         binding.btnButton.backgroundTintList = ColorStateList.valueOf(item.bgColor)
-        binding.ivFavorite.isVisible = item.text == favoriteText
+        // FIXED 7. use field favorite
+        binding.ivFavorite.isVisible = item.isFavorite
     }
 
     companion object {

@@ -10,14 +10,12 @@ class SampleAdapter(
 
     private val list = mutableListOf<SampleItem>()
 
-    private var favoriteText: String? = null
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SampleViewHolder {
         return SampleViewHolder.create(parent, onFavorite)
     }
 
     override fun onBindViewHolder(holder: SampleViewHolder, position: Int) {
-        holder.onBind(list[position], favoriteText.orEmpty())
+        holder.onBind(list[position])
     }
 
     override fun getItemCount(): Int = list.size
@@ -27,9 +25,5 @@ class SampleAdapter(
         this.list.clear()
         this.list.addAll(list)
         notifyDataSetChanged()
-    }
-
-    fun updateFavorite(text: String) {
-        this.favoriteText = text
     }
 }

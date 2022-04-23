@@ -39,7 +39,10 @@ internal class SearchViewModelTest {
         sampleItemGenerator = mock {
             on { generate() } doReturn SampleItem("", 0)
         }
-        viewModel = SearchViewModel(sampleItemGenerator)
+        viewModel = SearchViewModel(
+            generator = sampleItemGenerator,
+            savingRepository = mock()
+        )
     }
 
     @After

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pluu.sample.codeforreadability.data.SavingRepository
 import com.pluu.sample.codeforreadability.model.SampleItem
 import com.pluu.sample.codeforreadability.provider.SampleItemGenerator
 import com.pluu.sample.codeforreadability.provider.provideRepository
@@ -13,7 +14,9 @@ import logcat.logcat
 // FIXED 3. use ViewModel
 class SearchViewModel(
     // FIXED 6. provide generator
-    private val generator: SampleItemGenerator
+    private val generator: SampleItemGenerator,
+    // FIXED 7. provide saver
+    private val savingRepository: SavingRepository
 ) : ViewModel() {
 
     private val logRepository by lazy {
@@ -35,7 +38,9 @@ class SearchViewModel(
         val item = generator.generate()
 
         if (cachedList.none { it.text == item.text }) {
-            cachedList.add(item)
+            // FIXED 7. use favorite
+            val favoriteText = savingRepository.getFavorite()
+            cachedList.add(item.copy(isFavorite = item.text == favoriteText))
             _items.value = cachedList.sortedBy { it.text }
         } else {
             _messageEvent.value = "Duplicate item : ${item.text}"
@@ -63,5 +68,16 @@ class SearchViewModel(
 //                    logcat { result.toString() }
 //                }
         }
+    }
+
+    // FIXED 7. update favorite
+    fun updateFavorite(text: String) {
+        savingRepository.saveFavorite(text)
+        val snapshot = cachedList.map {
+            it.copy(isFavorite = it.text == text)
+        }
+        cachedList.clear()
+        cachedList.addAll(snapshot)
+        _items.value = cachedList.sortedBy { it.text }
     }
 }
