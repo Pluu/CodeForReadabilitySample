@@ -37,12 +37,14 @@ android {
     }
     buildFeatures {
         viewBinding true
-        dataBinding true
+        // FIXED 2. unnecessary gradle options
+        // dataBinding true
     }
 }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    // FIXED 2. unnecessary gradle options
+//    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
