@@ -38,7 +38,8 @@ internal class SearchViewModelTest {
         Dispatchers.setMain(dispatcher)
         viewModel = SearchViewModel(
             itemRepository = itemRepository,
-            savingRepository = mock()
+            savingRepository = mock(),
+            logRepository = mock()
         )
     }
 

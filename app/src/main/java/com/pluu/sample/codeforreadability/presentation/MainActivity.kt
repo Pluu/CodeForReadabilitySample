@@ -2,9 +2,8 @@ package com.pluu.sample.codeforreadability.presentation
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.pluu.sample.codeforreadability.data.ItemRepositoryImpl
-import com.pluu.sample.codeforreadability.data.SavingRepositoryImpl
 import com.pluu.sample.codeforreadability.databinding.ActivityMainBinding
 import com.pluu.sample.codeforreadability.utils.dp
 
@@ -15,13 +14,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     // FIXED 3. use ViewModel
-    private val viewModel by lazy {
-        // FIXED 6. provide generator
-        // FIXED 7. provide saver
-        SearchViewModel(
-            itemRepository = ItemRepositoryImpl(),
-            savingRepository = SavingRepositoryImpl(this)
-        )
+    private val viewModel: SearchViewModel by viewModels {
+        // FIXED 10. user ViewModelProvider Factory
+        SearchViewModelFactory(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

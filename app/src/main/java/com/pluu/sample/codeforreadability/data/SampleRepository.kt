@@ -1,11 +1,16 @@
 package com.pluu.sample.codeforreadability.data
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class SampleRepository(
+interface SampleRepository : SampleApi {
+    fun sendLogFlow(): Flow<LogResult>
+}
+
+class SampleRepositoryImpl(
     private val sampleApi: SampleApi
-) : SampleApi by sampleApi {
-    fun sendLogFlow() = flow {
+) : SampleRepository, SampleApi by sampleApi {
+    override fun sendLogFlow() = flow {
         emit(sampleApi.sendLog())
     }
 }
