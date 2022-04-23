@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.pluu.sample.codeforreadability.databinding.ActivityMainBinding
+import com.pluu.sample.codeforreadability.provider.SampleItemGeneratorImpl
 import com.pluu.sample.codeforreadability.utils.dp
 
 class MainActivity : AppCompatActivity() {
@@ -20,7 +21,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     // FIXED 3. use ViewModel
-    private val viewModel by lazy { SearchViewModel() }
+    private val viewModel by lazy {
+        // FIXED 6. provide generator
+        SearchViewModel(SampleItemGeneratorImpl())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,17 +1,20 @@
 package com.pluu.sample.codeforreadability.presentation
 
-import android.graphics.Color
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pluu.sample.codeforreadability.model.SampleItem
+import com.pluu.sample.codeforreadability.provider.SampleItemGenerator
 import com.pluu.sample.codeforreadability.provider.provideRepository
 import kotlinx.coroutines.launch
 import logcat.logcat
 
 // FIXED 3. use ViewModel
-class SearchViewModel : ViewModel() {
+class SearchViewModel(
+    // FIXED 6. provide generator
+    private val generator: SampleItemGenerator
+) : ViewModel() {
 
     private val logRepository by lazy {
         provideRepository()
@@ -28,14 +31,8 @@ class SearchViewModel : ViewModel() {
 
     // FIXED 4. move generate
     fun generate() {
-        val item = SampleItem(
-            text = ('a' + (0 until 26).random()).toString(),
-            bgColor = Color.rgb(
-                (0..255).random(),
-                (0..255).random(),
-                (0..255).random()
-            )
-        )
+        // FIXED 6. use generator
+        val item = generator.generate()
 
         if (cachedList.none { it.text == item.text }) {
             cachedList.add(item)
