@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.pluu.sample.codeforreadability.data.ItemRepositoryImpl
 import com.pluu.sample.codeforreadability.data.SampleRepositoryImpl
 import com.pluu.sample.codeforreadability.data.SavingRepositoryImpl
-import com.pluu.sample.codeforreadability.provider.RandomGenerator
+import com.pluu.sample.codeforreadability.provider.RandomGeneratorImpl
 import com.pluu.sample.codeforreadability.provider.provideRepository
 
 class SearchViewModelFactory(
@@ -14,7 +14,7 @@ class SearchViewModelFactory(
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return SearchViewModel(
-            itemRepository = ItemRepositoryImpl(randomGenerator = RandomGenerator()),
+            itemRepository = ItemRepositoryImpl(randomGenerator = RandomGeneratorImpl()),
             savingRepository = SavingRepositoryImpl(context),
             logRepository = SampleRepositoryImpl(provideRepository())
         ) as T

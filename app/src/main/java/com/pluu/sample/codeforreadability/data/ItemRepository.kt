@@ -2,6 +2,7 @@ package com.pluu.sample.codeforreadability.data
 
 import com.pluu.sample.codeforreadability.model.GenerateItem
 import com.pluu.sample.codeforreadability.provider.RandomGenerator
+import java.util.*
 
 interface ItemRepository {
     val data: List<GenerateItem>
@@ -16,18 +17,22 @@ class ItemRepositoryImpl(
     // FIXED 11. inject random generator
     private val randomGenerator: RandomGenerator
 ) : ItemRepository {
-    private val cachedList = mutableListOf<GenerateItem>()
+    // FIXED 13. modify container type
+    private val cachedSet = TreeSet<GenerateItem>(
+        TreeSet { p0, p1 ->
+            p0.text.compareTo(p1.text)
+        }
+    )
 
     override val data: List<GenerateItem>
-        get() = cachedList
+        get() = cachedSet.toList()
 
     override fun generate(): Result<GenerateItem> {
         val item = GenerateItem(
             text = randomGenerator.randomAlphabet(),
             bgColor = randomGenerator.randomColor()
         )
-        return if (cachedList.none { it.text == item.text }) {
-            cachedList.add(item)
+        return if (cachedSet.add(item)) {
             Result.success(item)
         } else {
             Result.failure(IllegalStateException("Duplicate Item : ${item.text}"))
@@ -35,6 +40,6 @@ class ItemRepositoryImpl(
     }
 
     override fun reset() {
-        cachedList.clear()
+        cachedSet.clear()
     }
 }
