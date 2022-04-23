@@ -1,8 +1,8 @@
 package com.pluu.sample.codeforreadability.presentation
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.pluu.sample.codeforreadability.model.SampleItem
-import com.pluu.sample.codeforreadability.provider.SampleItemGenerator
+import com.pluu.sample.codeforreadability.model.GenerateItem
+import com.pluu.sample.codeforreadability.provider.GenerateItemGenerator
 import com.pluu.sample.codeforreadability.utils.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,18 +29,18 @@ internal class SearchViewModelTest {
     private lateinit var viewModel: SearchViewModel
 
     @Mock
-    private lateinit var sampleItemGenerator: SampleItemGenerator
+    private lateinit var generateItemGenerator: GenerateItemGenerator
 
     private val dispatcher = StandardTestDispatcher()
 
     @Before
     fun setup() {
         Dispatchers.setMain(dispatcher)
-        sampleItemGenerator = mock {
-            on { generate() } doReturn SampleItem("", 0)
+        generateItemGenerator = mock {
+            on { generate() } doReturn GenerateItem("", 0)
         }
         viewModel = SearchViewModel(
-            generator = sampleItemGenerator,
+            generator = generateItemGenerator,
             savingRepository = mock()
         )
     }

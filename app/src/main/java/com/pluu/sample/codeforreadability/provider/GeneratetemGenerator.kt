@@ -1,14 +1,14 @@
 package com.pluu.sample.codeforreadability.provider
 
 import android.graphics.Color
-import com.pluu.sample.codeforreadability.model.SampleItem
+import com.pluu.sample.codeforreadability.model.GenerateItem
 
-interface SampleItemGenerator {
-    fun generate(): SampleItem
+interface GenerateItemGenerator {
+    fun generate(): GenerateItem
 }
 
-class SampleItemGeneratorImpl : SampleItemGenerator {
-    override fun generate(): SampleItem = SampleItem(
+class GenerateItemGeneratorImpl : GenerateItemGenerator {
+    override fun generate(): GenerateItem = GenerateItem(
         text = ('a' + (0 until 26).random()).toString(),
         bgColor = Color.rgb(
             (0..255).random(),

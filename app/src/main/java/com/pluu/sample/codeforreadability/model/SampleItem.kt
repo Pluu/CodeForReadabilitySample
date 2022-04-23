@@ -6,7 +6,9 @@ data class SampleItem(
     val text: String,
     val bgColor: Int,
     // FIXED 7. add field favorite
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    // FIXED 8. add field action
+    val onFavorite: (String) -> Unit
 ) {
     fun isDarkBg(): Boolean {
         return ColorUtils.calculateLuminance(bgColor) < 0.5

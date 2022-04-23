@@ -10,8 +10,7 @@ import com.pluu.sample.codeforreadability.databinding.ItemSampleBinding
 import com.pluu.sample.codeforreadability.model.SampleItem
 
 class SampleViewHolder(
-    private val binding: ItemSampleBinding,
-    private val onFavorite: (String) -> Unit
+    private val binding: ItemSampleBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private var item: SampleItem? = null
@@ -19,7 +18,7 @@ class SampleViewHolder(
     init {
         binding.btnButton.setOnClickListener {
             item?.let { safeItem ->
-                onFavorite(safeItem.text)
+                safeItem.onFavorite(safeItem.text)
             }
         }
     }
@@ -35,11 +34,9 @@ class SampleViewHolder(
 
     companion object {
         fun create(
-            parent: ViewGroup,
-            onFavorite: (String) -> Unit
+            parent: ViewGroup
         ): SampleViewHolder = SampleViewHolder(
-            ItemSampleBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            onFavorite
+            ItemSampleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 }
