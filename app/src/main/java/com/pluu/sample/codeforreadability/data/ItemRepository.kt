@@ -1,7 +1,7 @@
 package com.pluu.sample.codeforreadability.data
 
-import android.graphics.Color
 import com.pluu.sample.codeforreadability.model.GenerateItem
+import com.pluu.sample.codeforreadability.provider.RandomGenerator
 
 interface ItemRepository {
     val data: List<GenerateItem>
@@ -12,7 +12,10 @@ interface ItemRepository {
 }
 
 // FIXED 9. use item repository
-class ItemRepositoryImpl : ItemRepository {
+class ItemRepositoryImpl(
+    // FIXED 11. inject random generator
+    private val randomGenerator: RandomGenerator
+) : ItemRepository {
     private val cachedList = mutableListOf<GenerateItem>()
 
     override val data: List<GenerateItem>
@@ -20,12 +23,8 @@ class ItemRepositoryImpl : ItemRepository {
 
     override fun generate(): Result<GenerateItem> {
         val item = GenerateItem(
-            text = ('a' + (0 until 26).random()).toString(),
-            bgColor = Color.rgb(
-                (0..255).random(),
-                (0..255).random(),
-                (0..255).random()
-            )
+            text = randomGenerator.randomAlphabet(),
+            bgColor = randomGenerator.randomColor()
         )
         return if (cachedList.none { it.text == item.text }) {
             cachedList.add(item)
