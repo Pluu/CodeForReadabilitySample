@@ -5,11 +5,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pluu.sample.codeforreadability.model.SampleItem
 
 class SampleAdapter(
-    private val onDuplicate: (SampleItem) -> Unit,
     private val onFavorite: (String) -> Unit
 ) : RecyclerView.Adapter<SampleViewHolder>() {
 
-    private var list = mutableListOf<SampleItem>()
+    private val list = mutableListOf<SampleItem>()
 
     private var favoriteText: String? = null
 
@@ -23,23 +22,14 @@ class SampleAdapter(
 
     override fun getItemCount(): Int = list.size
 
-    fun addItem(item: SampleItem) {
-        val isNoneItem = list.none { it.text == item.text }
-        if (isNoneItem) {
-            list.add(item)
-            list.sortBy { it.text }
-            notifyDataSetChanged()
-        } else {
-            onDuplicate(item)
-        }
+    // FIXED 4. modify list
+    fun submitList(list: List<SampleItem>) {
+        this.list.clear()
+        this.list.addAll(list)
+        notifyDataSetChanged()
     }
 
     fun updateFavorite(text: String) {
         this.favoriteText = text
-    }
-
-    fun reset() {
-        list.clear()
-        notifyDataSetChanged()
     }
 }
