@@ -2,5 +2,6 @@ package com.pluu.sample.codeforreadability.model
 
 data class GenerateItem(
     val text: String,
-    val bgColor: Int
+    // FIXED 12. modify instance type
+    val bgColor: ColorValue
 )

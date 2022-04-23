@@ -2,6 +2,7 @@ package com.pluu.sample.codeforreadability.presentation
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.pluu.sample.codeforreadability.data.ItemRepository
+import com.pluu.sample.codeforreadability.model.ColorValue
 import com.pluu.sample.codeforreadability.model.GenerateItem
 import com.pluu.sample.codeforreadability.utils.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
@@ -52,9 +53,9 @@ internal class SearchViewModelTest {
     fun generate() {
         // when 1
         whenever(itemRepository.generate())
-            .thenReturn(Result.success(GenerateItem("", 0)))
+            .thenReturn(Result.success(GenerateItem("", ColorValue(0))))
         whenever(itemRepository.data)
-            .thenReturn(listOf(GenerateItem("", 0)))
+            .thenReturn(listOf(GenerateItem("", ColorValue(0))))
 
         viewModel.generate()
         // then 1

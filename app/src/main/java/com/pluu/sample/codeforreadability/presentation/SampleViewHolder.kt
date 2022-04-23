@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.pluu.sample.codeforreadability.databinding.ItemSampleBinding
 import com.pluu.sample.codeforreadability.model.SampleItem
+import com.pluu.sample.codeforreadability.model.isDark
 
 class SampleViewHolder(
     private val binding: ItemSampleBinding
@@ -26,8 +27,8 @@ class SampleViewHolder(
     fun onBind(item: SampleItem) {
         this.item = item
         binding.btnButton.text = item.text
-        binding.btnButton.setTextColor(if (item.isDarkBg()) Color.WHITE else Color.BLACK)
-        binding.btnButton.backgroundTintList = ColorStateList.valueOf(item.bgColor)
+        binding.btnButton.setTextColor(if (item.bgColor.isDark()) Color.WHITE else Color.BLACK)
+        binding.btnButton.backgroundTintList = ColorStateList.valueOf(item.bgColor.value)
         // FIXED 7. use field favorite
         binding.ivFavorite.isVisible = item.isFavorite
     }
