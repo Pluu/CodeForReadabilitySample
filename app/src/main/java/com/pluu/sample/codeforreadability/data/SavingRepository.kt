@@ -1,29 +1,37 @@
 package com.pluu.sample.codeforreadability.data
 
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.pluu.sample.codeforreadability.utils.keyFlow
+import kotlinx.coroutines.flow.*
 
 interface SavingRepository {
-    fun saveFavorite(text: String)
+    // FIXED 14. modify data type
+    val favoriteTextFlow: Flow<String>
 
-    fun getFavorite(): String
+    fun saveFavorite(text: String)
 }
 
 class SavingRepositoryImpl(
-    context: Context
+    private val preferences: SharedPreferences
 ) : SavingRepository {
 
-    private val preferences: SharedPreferences =
-        context.getSharedPreferences("sample", Context.MODE_PRIVATE)
+    private val key = "KEY"
+
+    // FIXED 14. modify data type
+    override val favoriteTextFlow: Flow<String> = preferences.keyFlow
+        .filter { it == key || it == null }
+        .onStart { emit("Start") }
+        .map { getFavorite() }
+        .conflate()
 
     override fun saveFavorite(text: String) {
         preferences.edit {
-            putString("KEY", text)
+            putString(key, text)
         }
     }
 
-    override fun getFavorite(): String {
-        return preferences.getString("KEY", null).orEmpty()
+    private fun getFavorite(): String {
+        return preferences.getString(key, null).orEmpty()
     }
 }

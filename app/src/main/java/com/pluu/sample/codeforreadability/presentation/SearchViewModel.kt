@@ -1,14 +1,15 @@
 package com.pluu.sample.codeforreadability.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.pluu.sample.codeforreadability.data.ItemRepository
 import com.pluu.sample.codeforreadability.data.SampleRepository
 import com.pluu.sample.codeforreadability.data.SavingRepository
 import com.pluu.sample.codeforreadability.model.GenerateItem
 import com.pluu.sample.codeforreadability.model.SampleItem
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import logcat.logcat
 
@@ -18,12 +19,25 @@ class SearchViewModel(
     private val itemRepository: ItemRepository,
     // FIXED 7. provide saver
     private val savingRepository: SavingRepository,
-    private val logRepository: SampleRepository
+    private val logRepository: SampleRepository,
+    dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     // FIXED 4. add LiveData
-    private val _items = MutableLiveData<List<SampleItem>>()
-    val items: LiveData<List<SampleItem>> get() = _items
+    // FIXED 14. use flow combine
+    val items: LiveData<List<SampleItem>> = savingRepository.favoriteTextFlow.combine(
+        itemRepository.dataFlow
+    ) { savingText, list ->
+        list.map { item ->
+            item.toUiModel(
+                isFavorite = item.text == savingText,
+                onFavorite = ::updateFavorite
+            )
+        }
+    }.onStart {
+        emit(emptyList())
+    }.flowOn(dispatcher)
+        .asLiveData()
 
     private val _messageEvent = MutableLiveData<String>()
     val messageEvent: LiveData<String> get() = _messageEvent
@@ -32,9 +46,6 @@ class SearchViewModel(
     fun generate() {
         // FIXED 9. use item repository
         itemRepository.generate()
-            .onSuccess {
-                refresh()
-            }
             .onFailure {
                 _messageEvent.value = it.message.orEmpty()
             }
@@ -44,7 +55,6 @@ class SearchViewModel(
     fun reset() {
         sendLog()
         itemRepository.reset()
-        refresh()
     }
 
     // FIXED 3. move network
@@ -66,18 +76,6 @@ class SearchViewModel(
     // FIXED 7. update favorite
     private fun updateFavorite(text: String) {
         savingRepository.saveFavorite(text)
-        refresh()
-    }
-
-    // FIXED 9. modify refresh
-    private fun refresh() {
-        val savingText = savingRepository.getFavorite()
-        _items.value = itemRepository.data.map { item ->
-            item.toUiModel(
-                isFavorite = item.text == savingText,
-                onFavorite = ::updateFavorite
-            )
-        }.sortedBy { it.text }
     }
 }
 

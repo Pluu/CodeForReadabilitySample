@@ -1,5 +1,7 @@
 package com.pluu.sample.codeforreadability.provider
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.pluu.sample.codeforreadability.data.SampleApi
 import com.pluu.sample.codeforreadability.data.SampleRepository
 import com.pluu.sample.codeforreadability.data.SampleRepositoryImpl
@@ -16,3 +18,5 @@ fun provideRepository(): SampleRepository = SampleRepositoryImpl(provideApi())
 private fun provideApi(): SampleApi = provideRetrofit()
     .create(SampleApi::class.java)
 
+fun providePreference(context: Context): SharedPreferences =
+    context.getSharedPreferences("sample", Context.MODE_PRIVATE)

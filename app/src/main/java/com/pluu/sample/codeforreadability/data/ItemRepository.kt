@@ -1,11 +1,16 @@
 package com.pluu.sample.codeforreadability.data
 
 import com.pluu.sample.codeforreadability.model.GenerateItem
+import com.pluu.sample.codeforreadability.model.TriggerTreeSet
 import com.pluu.sample.codeforreadability.provider.RandomGenerator
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import java.util.*
 
 interface ItemRepository {
-    val data: List<GenerateItem>
+    // FIXED 14. modify data type
+    val dataFlow: Flow<List<GenerateItem>>
 
     fun generate(): Result<GenerateItem>
 
@@ -18,14 +23,23 @@ class ItemRepositoryImpl(
     private val randomGenerator: RandomGenerator
 ) : ItemRepository {
     // FIXED 13. modify container type
-    private val cachedSet = TreeSet<GenerateItem>(
+    private val cachedSet = TriggerTreeSet<GenerateItem>(
         TreeSet { p0, p1 ->
             p0.text.compareTo(p1.text)
         }
     )
 
-    override val data: List<GenerateItem>
-        get() = cachedSet.toList()
+    // FIXED 14. modify data type
+    override val dataFlow: Flow<List<GenerateItem>>
+        get() = callbackFlow {
+            trySend(cachedSet.toList())
+
+            val listener: () -> Unit = {
+                trySend(cachedSet.toList())
+            }
+            cachedSet.setListener(listener)
+            awaitClose { cachedSet.setListener(null) }
+        }
 
     override fun generate(): Result<GenerateItem> {
         val item = GenerateItem(
